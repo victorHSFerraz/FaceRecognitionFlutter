@@ -1,5 +1,5 @@
 ![Screenshot_1711217168](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/9e9af1c2-3343-440b-81d7-3ffb00a37ed3)
 ![Screenshot_1711217172](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/e811714c-b450-42cf-8e94-0da1b850472c)
-![Screenshot_1711217184](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/aa7b9994-1f66-4fd5-a1cb-76e53b71cd82)
+![Screenshot_1711217417](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/18d1ca22-0f1b-41ac-814c-7b6cd6726be5)
 ![Screenshot_1711217195](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/108a954d-cc45-4a02-98e1-3f4b85275f4b)
 ![Screenshot_1711217206](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/da79e190-c1c3-49a8-bb8d-756707e0e166)
