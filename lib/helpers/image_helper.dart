@@ -97,4 +97,8 @@ class ImageHelper {
     final resizedImage = copyResize(inputImage, width: 112, height: 112);
     return Float32List.fromList(resizedImage.getBytes().map((b) => (b - 127.5) / 127.5).toList());
   }
+
+  List<Image?> byteListToImage(List<Uint8List> bytes) {
+    return bytes.map((byte) => decodeImage(byte)).toList();
+  }
 }

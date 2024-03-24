@@ -82,13 +82,23 @@ class MLKitHelper {
         predictedResult = p;
       }
     }
+    log('distance=> $minDist');
     return predictedResult;
   }
 
-  double _euclideanDistance(List e1, List e2) {
+  double _euclideanDistance(List<dynamic> e1, List<dynamic> e2) {
+    if (e1.isEmpty || e2.isEmpty || e1.first is! List || e2.first is! List) {
+      throw ArgumentError('Both e1 and e2 must be non-empty lists of lists.');
+    }
     double sum = 0.0;
     for (int i = 0; i < e1.length; i++) {
-      sum += pow((e1[i] - e2[i]), 2);
+      List<dynamic> innerList1 = e1[i];
+      List<dynamic> innerList2 = e2[i];
+      for (int j = 0; j < innerList1.length; j++) {
+        double val1 = double.tryParse('${innerList1[j]}') ?? 0.0;
+        double val2 = double.tryParse('${innerList2[j]}') ?? 0.0;
+        sum += pow((val1 - val2), 2);
+      }
     }
     return sqrt(sum);
   }

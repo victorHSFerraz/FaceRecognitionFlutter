@@ -28,22 +28,22 @@ class _FaceDIViewViewState extends State<FaceDIView> {
     }
   }
 
-  Future<List<Uint8List?>> _getCropedFacesFromImage(String path) async {
+  Future<FacesInfo?> _getCropedFacesFromImage(String path) async {
     final faces = await _mlKitHelper.detectFaces(path);
 
     if (faces.isEmpty) {
-      return [];
+      return null;
     }
 
     final croppedFaces = await _imageHelper.cropFacesFromImage(faces, path);
 
     if (croppedFaces.isEmpty) {
-      return [];
+      return null;
     }
 
     final byteList = _imageHelper.imagesToByteList(croppedFaces);
 
-    return byteList;
+    return FacesInfo(bytes: byteList, faces: faces);
   }
 
   Future<List<Face>> _getFacesFromImage(String path) async {
@@ -102,7 +102,7 @@ class _FaceDIViewViewState extends State<FaceDIView> {
                   },
                 );
               },
-              child: const Text('Take Picture & Paint Detected Faces'),
+              child: const Text('Take Picture & Frame Detected Faces'),
             ),
             TextButton(
               onPressed: () {
@@ -216,13 +216,15 @@ class _FaceDIViewViewState extends State<FaceDIView> {
   void _identifyFaces(bool fromCamera, BuildContext context) {
     _takePicture(fromCamera: fromCamera).then((path) {
       if (path != null) {
-        _getCropedFacesFromImage(path).then((faces) {
-          if (faces.isNotEmpty) {
+        _getCropedFacesFromImage(path).then((info) {
+          if (info != null) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => IdentifyFacesView(
-                  bytes: faces.cast<Uint8List>(),
+                  bytes: info.bytes.cast<Uint8List>(),
+                  faces: info.faces,
+                  imagePath: path,
                 ),
               ),
             );
@@ -239,4 +241,11 @@ class _FaceDIViewViewState extends State<FaceDIView> {
       }
     });
   }
+}
+
+class FacesInfo {
+  final List<Face> faces;
+  final List<Uint8List> bytes;
+
+  FacesInfo({required this.bytes, required this.faces});
 }
