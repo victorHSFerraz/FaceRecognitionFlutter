@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -16,36 +17,53 @@ class FaceDIView extends StatefulWidget {
 }
 
 class _FaceDIViewViewState extends State<FaceDIView> {
+  final ImageHelper _imageHelper = ImageHelper();
+  final MLKitHelper _mlKitHelper = MLKitHelper();
+
   Future<String?> _takePicture({required bool fromCamera}) async {
     if (fromCamera) {
-      return ImageHelper().takePicture();
+      return _imageHelper.takePicture();
     } else {
-      return ImageHelper().pickImage();
+      return _imageHelper.pickImage();
     }
   }
 
   Future<List<Uint8List?>> _getCropedFacesFromImage(String path) async {
-    final faces = await MLKitHelper().detectFaces(path);
+    final faces = await _mlKitHelper.detectFaces(path);
 
     if (faces.isEmpty) {
       return [];
     }
 
-    final croppedFaces = await ImageHelper().cropFacesFromImage(faces, path);
+    final croppedFaces = await _imageHelper.cropFacesFromImage(faces, path);
 
     if (croppedFaces.isEmpty) {
       return [];
     }
 
-    final byteList = ImageHelper().imagesToByteList(croppedFaces);
+    final byteList = _imageHelper.imagesToByteList(croppedFaces);
 
     return byteList;
   }
 
   Future<List<Face>> _getFacesFromImage(String path) async {
-    final faces = await MLKitHelper().detectFaces(path);
+    final faces = await _mlKitHelper.detectFaces(path);
 
     return faces;
+  }
+
+  Future<void> recognizeFaces(String imagePath, List<Face> faces) async {
+    for (final face in faces) {
+      _mlKitHelper.processFaceImageForRecognition(imagePath, face).then((value) {
+        if (value != null) {
+          _mlKitHelper.identifyFace(value).then((person) {
+            if (person != null) {
+              log('Person: ${person.name}');
+            }
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -125,11 +143,31 @@ class _FaceDIViewViewState extends State<FaceDIView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _takePicture(fromCamera: true).then((path) {
+                                if (path != null) {
+                                  _getFacesFromImage(path).then((faces) {
+                                    if (faces.isNotEmpty) {
+                                      recognizeFaces(path, faces);
+                                    }
+                                  });
+                                }
+                              });
+                            },
                             child: const Text('Camera'),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _takePicture(fromCamera: false).then((path) {
+                                if (path != null) {
+                                  _getFacesFromImage(path).then((faces) {
+                                    if (faces.isNotEmpty) {
+                                      recognizeFaces(path, faces);
+                                    }
+                                  });
+                                }
+                              });
+                            },
                             child: const Text('Gallery'),
                           ),
                         ],

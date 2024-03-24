@@ -17,7 +17,7 @@ class _PaintFacesViewState extends State<PaintFacesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Faces Detected')),
+      appBar: AppBar(title: const Text('Detected Faces')),
       body: Center(
         child: Container(
           margin: const EdgeInsets.all(20),
