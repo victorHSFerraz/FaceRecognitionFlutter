@@ -1,16 +1,5 @@
-# v_samples
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screenshot_1711217168](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/9e9af1c2-3343-440b-81d7-3ffb00a37ed3)
+![Screenshot_1711217172](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/e811714c-b450-42cf-8e94-0da1b850472c)
+![Screenshot_1711217417](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/18d1ca22-0f1b-41ac-814c-7b6cd6726be5)
+![Screenshot_1711217195](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/108a954d-cc45-4a02-98e1-3f4b85275f4b)
+![Screenshot_1711217206](https://github.com/victorHSFerraz/AISamplesFlutter/assets/58578468/da79e190-c1c3-49a8-bb8d-756707e0e166)
