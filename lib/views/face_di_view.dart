@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:v_samples/helpers/ml_kit_helper.dart';
+import 'package:v_samples/models/person.dart';
 import 'package:v_samples/views/identify_faces_view.dart';
 import 'package:v_samples/views/paint_faces_view.dart';
 
@@ -52,18 +53,18 @@ class _FaceDIViewViewState extends State<FaceDIView> {
     return faces;
   }
 
-  Future<void> recognizeFaces(String imagePath, List<Face> faces) async {
+  Future<List<Person>> recognizeFaces(String imagePath, List<Face> faces) async {
+    List<Person> recognizedPersons = [];
     for (final face in faces) {
-      _mlKitHelper.processFaceImageForRecognition(imagePath, face).then((value) {
-        if (value != null) {
-          _mlKitHelper.identifyFace(value).then((person) {
-            if (person != null) {
-              log('Person: ${person.name}');
-            }
-          });
+      final value = await _mlKitHelper.processFaceImageForRecognition(imagePath, face);
+      if (value != null) {
+        final person = await _mlKitHelper.identifyFace(value);
+        if (person != null) {
+          recognizedPersons.add(person);
         }
-      });
+      }
     }
+    return recognizedPersons;
   }
 
   @override
@@ -143,31 +144,11 @@ class _FaceDIViewViewState extends State<FaceDIView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                            onPressed: () {
-                              _takePicture(fromCamera: true).then((path) {
-                                if (path != null) {
-                                  _getFacesFromImage(path).then((faces) {
-                                    if (faces.isNotEmpty) {
-                                      recognizeFaces(path, faces);
-                                    }
-                                  });
-                                }
-                              });
-                            },
+                            onPressed: () => _recognizeFaces(true, context),
                             child: const Text('Camera'),
                           ),
                           TextButton(
-                            onPressed: () {
-                              _takePicture(fromCamera: false).then((path) {
-                                if (path != null) {
-                                  _getFacesFromImage(path).then((faces) {
-                                    if (faces.isNotEmpty) {
-                                      recognizeFaces(path, faces);
-                                    }
-                                  });
-                                }
-                              });
-                            },
+                            onPressed: () => _recognizeFaces(false, context),
                             child: const Text('Gallery'),
                           ),
                         ],
@@ -187,7 +168,7 @@ class _FaceDIViewViewState extends State<FaceDIView> {
   void _paintFaces(bool fromCamera, BuildContext context) {
     _takePicture(fromCamera: fromCamera).then((path) async {
       if (path != null) {
-        final image = await ImageHelper().fileToUiImage(path);
+        final image = await _imageHelper.fileToUiImage(path);
         _getFacesFromImage(path).then((faces) {
           if (faces.isNotEmpty && image != null) {
             Navigator.push(
@@ -240,6 +221,28 @@ class _FaceDIViewViewState extends State<FaceDIView> {
         });
       }
     });
+  }
+
+  void _recognizeFaces(bool fromCamera, BuildContext context) async {
+    final path = await _takePicture(fromCamera: fromCamera);
+    if (path != null) {
+      final image = await _imageHelper.fileToUiImage(path);
+      final faces = await _getFacesFromImage(path);
+      if (faces.isNotEmpty && image != null) {
+        await recognizeFaces(path, faces).then(
+          (persons) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PaintFacesView(
+                faces: faces,
+                image: image,
+                recognizedPersons: persons,
+              ),
+            ),
+          ),
+        );
+      }
+    }
   }
 }
 

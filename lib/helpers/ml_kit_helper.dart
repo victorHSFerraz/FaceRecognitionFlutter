@@ -9,7 +9,7 @@ import 'package:v_samples/models/person.dart';
 import '../db/database.dart';
 
 class MLKitHelper {
-  final double threshold = 0.5;
+  final double threshold = 0.9;
 
   late final FaceDetector _faceDetector;
   late final Interpreter _interpreter;
@@ -73,16 +73,15 @@ class MLKitHelper {
     double currDist = 0.0;
     Person? predictedResult = Person(name: "Unknown", modelData: []);
 
-    log('persons.length=> ${persons.length}');
-
     for (Person p in persons) {
       currDist = _euclideanDistance(p.modelData, predictedData);
+      log("actual distance: $currDist");
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
         predictedResult = p;
       }
     }
-    log('distance=> $minDist');
+    log('person: ${predictedResult?.name}, distance: $minDist');
     return predictedResult;
   }
 

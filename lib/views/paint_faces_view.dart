@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:v_samples/models/person.dart';
 import 'dart:ui' as ui;
 
 import '../shared/face_painter.dart';
@@ -7,7 +8,8 @@ import '../shared/face_painter.dart';
 class PaintFacesView extends StatefulWidget {
   final List<Face> faces;
   final ui.Image image;
-  const PaintFacesView({super.key, required this.faces, required this.image});
+  final List<Person>? recognizedPersons;
+  const PaintFacesView({super.key, required this.faces, required this.image, this.recognizedPersons});
 
   @override
   State<PaintFacesView> createState() => _PaintFacesViewState();
@@ -29,6 +31,7 @@ class _PaintFacesViewState extends State<PaintFacesView> {
                 painter: FacePainter(
                   facesList: widget.faces,
                   imageFile: widget.image,
+                  recognizedPersons: widget.recognizedPersons ?? [],
                 ),
               ),
             ),
